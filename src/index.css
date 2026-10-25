@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------
+   GLOBAL INTERACTIVE CURSOR FIX
+   Ensures all buttons, links, controls, and clickable elements show the pointer hand cursor
+--------------------------------------------------------------------- */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+select,
+summary,
+a,
+label[for],
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+button:disabled,
+button[disabled],
+input[type="button"]:disabled,
+input[type="submit"]:disabled,
+[role="button"][aria-disabled="true"],
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
