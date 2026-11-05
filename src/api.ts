@@ -1,7 +1,8 @@
 import { User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem } from './types';
 
-const API_ORIGIN = (import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).trim().replace(/\/+$/, '') : '');
-const BASE_URL = `${API_ORIGIN}/api/v1`;
+const rawApiUrl = (import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).trim() : '');
+const cleanOrigin = rawApiUrl.replace(/\/+$/, '').replace(/\/api\/v1\/?$/, '');
+const BASE_URL = cleanOrigin ? `${cleanOrigin}/api/v1` : '/api/v1';
 
 function getHeaders() {
   const token = localStorage.getItem('jg_admin_token');
