@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // Standalone Admin Portal Vite Config
 export default defineConfig({
-  base: '/admin/',
+  base: '/',
   plugins: [
     react(),
     tailwindcss()
@@ -19,4 +19,3 @@ export default defineConfig({
     }
   }
 });
-
