@@ -1,5 +1,16 @@
 export type UserRole = 'ADMIN' | 'CEO' | 'COO' | 'EMPLOYEE';
 
+export interface Badge {
+  id: number;
+  code: string;
+  title: string;
+  description: string;
+  icon: string;
+  xpBonus: number;
+  awardedAt?: string;
+  reason?: string;
+}
+
 export interface User {
   id: number;
   fullName: string;
@@ -11,8 +22,46 @@ export interface User {
   level: number;
   streakCount: number;
   avatarTitle: string;
+  badges?: Badge[];
   createdAt: string;
   lastLogin?: string;
+}
+
+export interface LeaderboardUser {
+  id: number;
+  fullName: string;
+  role: string;
+  department: string;
+  xp: number;
+  level: number;
+  streakCount: number;
+  avatarTitle: string;
+  completedTasksCount: number;
+  badgesCount: number;
+  rank: number;
+}
+
+export interface Milestone {
+  id: number;
+  projectId: number;
+  title: string;
+  description?: string;
+  sequence: number;
+  ownerId?: number;
+  ownerName?: string;
+  reviewerId?: number;
+  reviewerName?: string;
+  status: 'NOT_STARTED' | 'IN_PROGRESS' | 'AT_RISK' | 'BLOCKED' | 'SUBMITTED_FOR_REVIEW' | 'CHANGES_REQUESTED' | 'APPROVED_COMPLETED' | 'CANCELLED';
+  startDate: string;
+  dueDate: string;
+  acceptanceCriteria: string;
+  acceptedAt?: string;
+  evidenceNotes?: string;
+  evidenceUrl?: string;
+  xpReward: number;
+  projectName?: string;
+  predecessorIds?: number[];
+  tasks?: any[];
 }
 
 export interface Project {
@@ -87,5 +136,43 @@ export interface NotificationItem {
   readAt?: string;
   createdAt: string;
 }
+
+export interface PersonalTask {
+  id: string | number;
+  title: string;
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
+  priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  dueDate?: string;
+}
+
+export interface PersonalMilestone {
+  id: string | number;
+  title: string;
+  dueDate?: string;
+  completed: boolean;
+}
+
+export interface PersonalProject {
+  id: number;
+  userId: number;
+  title: string;
+  description?: string;
+  category?: string;
+  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  status: 'PLANNING' | 'IN_PROGRESS' | 'ON_HOLD' | 'COMPLETED';
+  startDate?: string;
+  targetDate?: string;
+  milestones: PersonalMilestone[];
+  tasks: PersonalTask[];
+  notes?: string;
+  completedMilestones?: number;
+  completedTasks?: number;
+  totalMilestones?: number;
+  totalTasks?: number;
+  progressPercentage?: number;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 
 

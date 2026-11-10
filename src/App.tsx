@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, FolderKanban, Settings, FileSearch, 
-  Shield, RefreshCw 
+  Shield, RefreshCw, Lock, Trophy 
 } from 'lucide-react';
 import { adminApi } from './api';
-import { User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem } from './types';
+import { User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem, LeaderboardUser, Badge } from './types';
 import { AdminLogin } from './components/AdminLogin';
 import { AdminNavbar } from './components/AdminNavbar';
 import { UserManagementTab } from './components/tabs/UserManagementTab';
 import { ProjectManagementTab } from './components/tabs/ProjectManagementTab';
 import { SystemConfigTab } from './components/tabs/SystemConfigTab';
 import { AuditLogTab } from './components/tabs/AuditLogTab';
+import { PersonalProjectTracker } from './components/PersonalProjectTracker';
+import { HallOfFameTab } from './components/tabs/HallOfFameTab';
+import { LeaderboardModal } from './components/LeaderboardModal';
 import { LogoutModal } from './components/LogoutModal';
 import { toast } from './context/ToastContext';
 
@@ -19,9 +22,10 @@ export function App() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
 
   // Tab State
-  const [activeTab, setActiveTab] = useState<'USERS' | 'PROJECTS' | 'CONFIG' | 'AUDIT'>('USERS');
+  const [activeTab, setActiveTab] = useState<'USERS' | 'PROJECTS' | 'CONFIG' | 'AUDIT' | 'PERSONAL_PROJECTS' | 'HALL_OF_FAME'>('USERS');
 
   // Core Data
   const [users, setUsers] = useState<User[]>([]);
@@ -29,6 +33,8 @@ export function App() {
   const [systemConfig, setSystemConfig] = useState<SystemConfig | null>(null);
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
+  const [badges, setBadges] = useState<Badge[]>([]);
   const [mongoStatus, setMongoStatus] = useState<MongoStatus>({
     connected: false,
     dbName: null,
@@ -89,7 +95,7 @@ export function App() {
   const loadAllAdminData = async () => {
     setRefreshing(true);
     try {
-      const [uData, pData, cfgData, audData, mStatus, notifsData] = await Promise.all([
+      const [uData, pData, cfgData, audData, mStatus, notifsData, lbData, bgData] = await Promise.all([
         adminApi.getUsers().catch(() => []),
         adminApi.getProjects().catch(() => []),
         adminApi.getConfig().catch(() => ({
@@ -108,7 +114,9 @@ export function App() {
           message: 'Local Persistent Document Engine Active',
           hasConfiguredUri: false
         })),
-        adminApi.getNotifications().catch(() => [])
+        adminApi.getNotifications().catch(() => []),
+        adminApi.getLeaderboard().catch(() => []),
+        adminApi.getBadges().catch(() => [])
       ]);
       setUsers(uData);
       setProjects(pData);
@@ -116,6 +124,8 @@ export function App() {
       setAuditEvents(audData);
       setMongoStatus(mStatus);
       setNotifications(notifsData);
+      setLeaderboard(lbData);
+      setBadges(bgData);
     } catch (err) {
       console.error('Failed to load admin data:', err);
     } finally {
@@ -150,7 +160,7 @@ export function App() {
 
   if (isInitializing) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
+      <div className="min-h-screen bg-white flex items-center justify-center text-gray-600">
         <div className="flex items-center space-x-2">
           <RefreshCw className="w-5 h-5 animate-spin text-red-500" />
           <span>Initializing JG Innovative Hub Administrator Console...</span>
@@ -171,7 +181,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans">
       {/* Top Navbar */}
       <AdminNavbar
         currentUser={currentUser}
@@ -181,13 +191,15 @@ export function App() {
         notifications={notifications}
         onMarkNotificationRead={handleMarkNotificationRead}
         onMarkAllNotificationsRead={handleMarkAllNotificationsRead}
+        onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
       />
 
+
       {/* Admin Module Navigation Tabs */}
-      <div className="bg-slate-900/90 border-b border-slate-800 px-4 sm:px-6 lg:px-8 py-3">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-2.5">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
-            <span className="text-[11px] uppercase tracking-wider font-extrabold text-red-400 flex items-center space-x-1.5">
+            <span className="text-[11px] uppercase tracking-wider font-bold text-red-700 flex items-center space-x-1.5">
               <Shield className="w-3.5 h-3.5" />
               <span>Admin Control Center:</span>
             </span>
@@ -196,10 +208,10 @@ export function App() {
           <div className="flex items-center space-x-2 overflow-x-auto pb-1 sm:pb-0">
             <button
               onClick={() => setActiveTab('USERS')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
                 activeTab === 'USERS'
-                  ? 'bg-red-500/20 text-red-300 border-red-500/50 shadow-md shadow-red-500/20'
-                  : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -208,10 +220,10 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('PROJECTS')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
                 activeTab === 'PROJECTS'
-                  ? 'bg-red-500/20 text-red-300 border-red-500/50 shadow-md shadow-red-500/20'
-                  : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
               }`}
             >
               <FolderKanban className="w-3.5 h-3.5" />
@@ -220,10 +232,10 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('CONFIG')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
                 activeTab === 'CONFIG'
-                  ? 'bg-red-500/20 text-red-300 border-red-500/50 shadow-md shadow-red-500/20'
-                  : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
               }`}
             >
               <Settings className="w-3.5 h-3.5" />
@@ -232,14 +244,38 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('AUDIT')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
                 activeTab === 'AUDIT'
-                  ? 'bg-red-500/20 text-red-300 border-red-500/50 shadow-md shadow-red-500/20'
-                  : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
               }`}
             >
               <FileSearch className="w-3.5 h-3.5" />
               <span>4. Audit Trail ({auditEvents.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('PERSONAL_PROJECTS')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+                activeTab === 'PERSONAL_PROJECTS'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>5. Personal Projects</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('HALL_OF_FAME')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+                activeTab === 'HALL_OF_FAME'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Trophy className="w-3.5 h-3.5 text-amber-500" />
+              <span>6. Hall of Fame</span>
             </button>
           </div>
         </div>
@@ -260,12 +296,25 @@ export function App() {
         )}
 
         {activeTab === 'AUDIT' && (
-          <AuditLogTab auditEvents={auditEvents} />
+          <AuditLogTab auditEvents={auditEvents} onAuditEventsChanged={loadAllAdminData} />
+        )}
+
+        {activeTab === 'PERSONAL_PROJECTS' && currentUser && (
+          <PersonalProjectTracker currentUser={currentUser} />
+        )}
+
+        {activeTab === 'HALL_OF_FAME' && currentUser && (
+          <HallOfFameTab
+            leaderboard={leaderboard}
+            badges={badges}
+            currentUser={currentUser}
+            allUsers={users}
+          />
         )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-6 py-4 text-xs text-slate-500">
+      <footer className="border-t border-gray-200 bg-white px-6 py-4 text-xs text-gray-500">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <span>&copy; 2026 JG INNOVATIVE HUB PVT. LTD. All rights reserved.</span>
         </div>
@@ -281,6 +330,18 @@ export function App() {
         }}
         currentUser={currentUser}
       />
+
+      {/* Innovation Hall of Fame & Badges Modal */}
+      {currentUser && (
+        <LeaderboardModal
+          isOpen={isLeaderboardOpen}
+          onClose={() => setIsLeaderboardOpen(false)}
+          leaderboard={leaderboard}
+          badges={badges}
+          currentUser={currentUser}
+        />
+      )}
     </div>
   );
 }
+

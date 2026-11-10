@@ -1,4 +1,8 @@
-import { User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem } from './types';
+import { 
+  User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem,
+  PersonalProject, PersonalMilestone, PersonalTask,
+  Badge, LeaderboardUser
+} from './types';
 
 const rawApiUrl = (import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).trim() : '');
 const cleanOrigin = rawApiUrl.replace(/\/+$/, '').replace(/\/api\/v1\/?$/, '');
@@ -146,6 +150,19 @@ export const adminApi = {
     return request<AuditEvent[]>('/audit');
   },
 
+  deleteAuditEvent: async (id: number | string): Promise<{ status: string; message: string; deletedId: number | string }> => {
+    return request<{ status: string; message: string; deletedId: number | string }>(`/audit/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  bulkDeleteAuditEvents: async (ids: (number | string)[]): Promise<{ status: string; deletedCount: number; message: string }> => {
+    return request<{ status: string; deletedCount: number; message: string }>('/audit/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids })
+    });
+  },
+
   // MongoDB Atlas Engine
   getMongoStatus: async (): Promise<MongoStatus> => {
     return request<MongoStatus>('/system/mongodb-status');
@@ -194,6 +211,79 @@ export const adminApi = {
     return () => {
       eventSource.close();
     };
+  },
+
+  // Personal Projects (Private to Admin)
+  getPersonalProjects: async (): Promise<PersonalProject[]> => {
+    return request<PersonalProject[]>('/personal-projects');
+  },
+
+  createPersonalProject: async (data: Partial<PersonalProject>): Promise<PersonalProject> => {
+    return request<PersonalProject>('/personal-projects', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  updatePersonalProject: async (id: number | string, data: Partial<PersonalProject>): Promise<PersonalProject> => {
+    return request<PersonalProject>(`/personal-projects/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  },
+
+  deletePersonalProject: async (id: number | string): Promise<{ success: boolean; message: string }> => {
+    return request<{ success: boolean; message: string }>(`/personal-projects/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  addPersonalMilestone: async (projectId: number | string, data: Partial<PersonalMilestone>): Promise<PersonalProject> => {
+    return request<PersonalProject>(`/personal-projects/${projectId}/milestones`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  updatePersonalMilestone: async (projectId: number | string, milestoneId: string | number, data: Partial<PersonalMilestone>): Promise<PersonalProject> => {
+    return request<PersonalProject>(`/personal-projects/${projectId}/milestones/${milestoneId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  },
+
+  deletePersonalMilestone: async (projectId: number | string, milestoneId: string | number): Promise<PersonalProject> => {
+    return request<PersonalProject>(`/personal-projects/${projectId}/milestones/${milestoneId}`, {
+      method: 'DELETE'
+    });
+  },
+
+  addPersonalTask: async (projectId: number | string, data: Partial<PersonalTask>): Promise<PersonalProject> => {
+    return request<PersonalProject>(`/personal-projects/${projectId}/tasks`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  updatePersonalTask: async (projectId: number | string, taskId: string | number, data: Partial<PersonalTask>): Promise<PersonalProject> => {
+    return request<PersonalProject>(`/personal-projects/${projectId}/tasks/${taskId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  },
+
+  deletePersonalTask: async (projectId: number | string, taskId: string | number): Promise<PersonalProject> => {
+    return request<PersonalProject>(`/personal-projects/${projectId}/tasks/${taskId}`, {
+      method: 'DELETE'
+    });
+  },
+
+  getLeaderboard: async (): Promise<LeaderboardUser[]> => {
+    return request<LeaderboardUser[]>('/gamification/leaderboard');
+  },
+
+  getBadges: async (): Promise<Badge[]> => {
+    return request<Badge[]>('/gamification/badges');
   }
 };
 

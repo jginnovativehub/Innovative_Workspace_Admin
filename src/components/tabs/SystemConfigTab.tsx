@@ -41,13 +41,13 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
 
   return (
     <div className="max-w-3xl text-left space-y-6">
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
         <div>
-          <h2 className="text-lg font-black text-white flex items-center space-x-2">
-            <Settings className="w-5 h-5 text-red-400" />
+          <h2 className="text-lg font-black text-gray-900 flex items-center space-x-2">
+            <Settings className="w-5 h-5 text-red-700" />
             <span>Platform Operational Parameters</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-gray-600 mt-1">
             Global governance rules affecting reporting deadlines, notification schedules, and document compliance company-wide.
           </p>
         </div>
@@ -55,13 +55,13 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Weekly Reporting Deadline Day
               </label>
               <select
                 value={deadlineDay}
                 onChange={e => setDeadlineDay(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-900 text-xs font-semibold focus:outline-none focus:border-red-500"
               >
                 <option value="Thursday">Thursday</option>
                 <option value="Friday">Friday (Default)</option>
@@ -71,27 +71,27 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Reporting Cutoff Time
               </label>
               <input
                 type="time"
                 value={deadlineTime}
                 onChange={e => setDeadlineTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-900 text-xs font-mono focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Company Timezone
               </label>
               <select
                 value={timezone}
                 onChange={e => setTimezone(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-900 text-xs font-semibold focus:outline-none focus:border-red-500"
               >
                 <option value="Asia/Kolkata">Asia/Kolkata (IST - UTC+5:30)</option>
                 <option value="UTC">UTC (Coordinated Universal Time)</option>
@@ -101,13 +101,13 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Reporting Week Start Day
               </label>
               <select
                 value={weekStart}
                 onChange={e => setWeekStart(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-900 text-xs font-semibold focus:outline-none focus:border-red-500"
               >
                 <option value="Monday">Monday</option>
                 <option value="Sunday">Sunday</option>
@@ -117,7 +117,7 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Max Deliverable Evidence Attachment Size (MB)
               </label>
               <input
@@ -126,12 +126,12 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
                 max={100}
                 value={maxFileSize}
                 onChange={e => setMaxFileSize(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-900 text-xs font-mono focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Data & Audit Log Retention Period (Days)
               </label>
               <input
@@ -140,13 +140,13 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
                 max={3650}
                 value={retentionDays}
                 onChange={e => setRetentionDays(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-900 text-xs font-mono focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-red-950/20 border border-red-500/30 text-xs text-red-300 flex items-start space-x-2">
-            <ShieldCheck className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-red-950/20 border border-red-500/30 text-xs text-red-700 flex items-start space-x-2">
+            <ShieldCheck className="w-4 h-4 text-red-700 shrink-0 mt-0.5" />
             <span>
               All modifications to operational rules trigger an immediate immutable audit trail entry recording 
               the previous and updated parameters.
@@ -168,4 +168,5 @@ export const SystemConfigTab: React.FC<SystemConfigTabProps> = ({ config, onConf
     </div>
   );
 };
+
 
