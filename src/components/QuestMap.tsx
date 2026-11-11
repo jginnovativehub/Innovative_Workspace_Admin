@@ -18,7 +18,9 @@ export interface ProjectExpeditionRoadmapProps {
   onSelectMilestone?: (m: Milestone) => void;
   onSubmitForReview?: (m: Milestone) => void;
   onReviewMilestone?: (m: Milestone) => void;
+  onToggleCheckpoint?: (m: Milestone) => void;
   isLeader?: boolean;
+  isPersonalProject?: boolean;
 }
 
 interface NodeCoordinate {
@@ -39,7 +41,9 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
   onSelectMilestone,
   onSubmitForReview,
   onReviewMilestone,
-  isLeader = false
+  onToggleCheckpoint,
+  isLeader = false,
+  isPersonalProject = false
 }) => {
   // Normalize stages from either stages or milestones prop
   const stages = propStages || propMilestones || [];
@@ -114,15 +118,15 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
 
   const activeCoord = coords[activeStageIndex];
 
-  // Auto-scroll vertically with mouse/page to center on the active stage on load
-  useEffect(() => {
+  // Explicit user-triggered focus on active stage (never hijack scroll automatically)
+  const handleFocusActiveStage = () => {
     if (activeNodeRef.current) {
       activeNodeRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'center'
       });
     }
-  }, [activeStageIndex, coords]);
+  };
 
   // Construct Vertical S-Curve Path segments
   const pathSegments = useMemo(() => {
@@ -187,20 +191,27 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
                 {projectCode}
               </span>
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                Expedition Quest Map
+                {isPersonalProject ? 'Personal Quest Map' : 'Expedition Quest Map'}
               </span>
-              {(isLeader || Number(activeStage?.ownerId) === Number(currentUser.id)) && (
+              {isPersonalProject ? (
+                <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1">
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Private Initiative</span>
+                </span>
+              ) : (isLeader || Number(activeStage?.ownerId) === Number(currentUser.id)) ? (
                 <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center space-x-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Initiative Command Authority</span>
                 </span>
-              )}
+              ) : null}
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center space-x-2">
               <span>{projectName}</span>
             </h2>
             <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
-              Candy Crush-style vertical winding roadmap. Scroll down naturally with your mouse wheel to conquer milestone checkpoints.
+              {isPersonalProject 
+                ? 'Personal milestone expedition trail. Scroll down with your mouse wheel to conquer your self-directed checkpoints.'
+                : 'Candy Crush-style vertical winding roadmap. Scroll down naturally with your mouse wheel to conquer milestone checkpoints.'}
             </p>
           </div>
         </div>
@@ -277,12 +288,23 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
       --------------------------------------------------------------------- */}
       {viewMode === 'MAP' && (
         <div className="relative z-10 py-6 overflow-x-hidden">
-          {/* Mouse Wheel Traversal Hint */}
-          <div className="flex items-center justify-center pb-4">
+          {/* Mouse Wheel Traversal Hint & Optional Focus Action */}
+          <div className="flex items-center justify-center gap-3 pb-4 flex-wrap">
             <span className="flex items-center space-x-2 text-cyan-400 font-mono text-xs bg-slate-900/90 px-4 py-1.5 rounded-full border border-cyan-500/30 shadow-xs">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-              <span>Scroll down  to traverse the expedition road</span>
+              <span>Scroll freely with your mouse wheel to traverse the expedition road</span>
             </span>
+            {activeCoord && (
+              <button
+                type="button"
+                onClick={handleFocusActiveStage}
+                className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-cyan-400/50 transition-all cursor-pointer shadow-xs"
+                title="Center viewport on active stage"
+              >
+                <Target className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Jump to Stage {activeCoord.index + 1}</span>
+              </button>
+            )}
           </div>
 
           {/* Centralized Vertical Road Stage Container */}
@@ -815,41 +837,76 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
 
             {/* Stage Right Actions Cockpit */}
             <div className="flex flex-col gap-3 min-w-[220px] shrink-0">
-              {/* Submit for Review Action (Contributor / Owner) */}
-              {(inspectedStage.status === 'IN_PROGRESS' || 
-                inspectedStage.status === 'CHANGES_REQUESTED' || 
-                inspectedStage.status === 'NOT_STARTED') && onSubmitForReview && (
-                <button
-                  onClick={() => onSubmitForReview(inspectedStage)}
-                  className="w-full flex items-center justify-center space-x-2 px-5 py-3 rounded-2xl text-xs font-bold bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Submit for Review Gate</span>
-                </button>
-              )}
-
-              {/* Conduct Review Gate Action (Reviewer / Lead / Management) */}
-              {inspectedStage.status === 'SUBMITTED_FOR_REVIEW' && onReviewMilestone && (
-                <button
-                  onClick={() => onReviewMilestone(inspectedStage)}
-                  className="w-full flex items-center justify-center space-x-2 px-5 py-3 rounded-2xl text-xs font-bold bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white shadow-lg shadow-amber-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
-                >
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Conduct Review Gate</span>
-                </button>
-              )}
-
-              {/* Conquered Badge */}
-              {inspectedStage.status === 'APPROVED_COMPLETED' && (
-                <div className="p-4 bg-emerald-950/60 border border-emerald-500/40 rounded-2xl text-center shadow-lg space-y-1">
-                  <div className="flex items-center justify-center space-x-1.5 text-emerald-400 font-bold text-xs">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Stage Conquered!</span>
+              {/* Personal Project Direct Checkpoint Toggle */}
+              {isPersonalProject ? (
+                inspectedStage.status === 'APPROVED_COMPLETED' ? (
+                  <div className="space-y-2">
+                    <div className="p-4 bg-emerald-950/60 border border-emerald-500/40 rounded-2xl text-center shadow-lg space-y-1">
+                      <div className="flex items-center justify-center space-x-1.5 text-emerald-400 font-bold text-xs">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Checkpoint Conquered!</span>
+                      </div>
+                      <span className="text-[11px] text-emerald-300/80 block font-mono">
+                        +{inspectedStage.xpReward || 150} XP Credited
+                      </span>
+                    </div>
+                    {onToggleCheckpoint && (
+                      <button
+                        onClick={() => onToggleCheckpoint(inspectedStage)}
+                        className="w-full text-center text-xs text-slate-400 hover:text-white underline cursor-pointer py-1"
+                      >
+                        Reopen Checkpoint
+                      </button>
+                    )}
                   </div>
-                  <span className="text-[11px] text-emerald-300/80 block font-mono">
-                    +{inspectedStage.xpReward || 300} XP Credited
-                  </span>
-                </div>
+                ) : (
+                  <button
+                    onClick={() => (onToggleCheckpoint ? onToggleCheckpoint(inspectedStage) : onSubmitForReview?.(inspectedStage))}
+                    className="w-full flex items-center justify-center space-x-2 px-5 py-3 rounded-2xl text-xs font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white shadow-lg shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Conquer Checkpoint (+150 XP)</span>
+                  </button>
+                )
+              ) : (
+                <>
+                  {/* Submit for Review Action (Contributor / Owner) */}
+                  {(inspectedStage.status === 'IN_PROGRESS' || 
+                    inspectedStage.status === 'CHANGES_REQUESTED' || 
+                    inspectedStage.status === 'NOT_STARTED') && onSubmitForReview && (
+                    <button
+                      onClick={() => onSubmitForReview(inspectedStage)}
+                      className="w-full flex items-center justify-center space-x-2 px-5 py-3 rounded-2xl text-xs font-bold bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>Submit for Review Gate</span>
+                    </button>
+                  )}
+
+                  {/* Conduct Review Gate Action (Reviewer / Lead / Management) */}
+                  {inspectedStage.status === 'SUBMITTED_FOR_REVIEW' && onReviewMilestone && (
+                    <button
+                      onClick={() => onReviewMilestone(inspectedStage)}
+                      className="w-full flex items-center justify-center space-x-2 px-5 py-3 rounded-2xl text-xs font-bold bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white shadow-lg shadow-amber-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                    >
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Conduct Review Gate</span>
+                    </button>
+                  )}
+
+                  {/* Conquered Badge */}
+                  {inspectedStage.status === 'APPROVED_COMPLETED' && (
+                    <div className="p-4 bg-emerald-950/60 border border-emerald-500/40 rounded-2xl text-center shadow-lg space-y-1">
+                      <div className="flex items-center justify-center space-x-1.5 text-emerald-400 font-bold text-xs">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Stage Conquered!</span>
+                      </div>
+                      <span className="text-[11px] text-emerald-300/80 block font-mono">
+                        +{inspectedStage.xpReward || 300} XP Credited
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
 
               {/* Quick Jump between stages */}

@@ -125,7 +125,8 @@ export interface MongoStatus {
 }
 
 export interface NotificationItem {
-  id: number;
+  id: number | string;
+  _id?: string;
   recipientId?: number;
   recipientRole?: string;
   type: string;

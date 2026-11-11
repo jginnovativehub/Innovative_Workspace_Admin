@@ -9,9 +9,10 @@ interface AdminNavbarProps {
   onRefreshAll: () => void;
   refreshing: boolean;
   notifications: NotificationItem[];
-  onMarkNotificationRead: (id: number) => void;
+  onMarkNotificationRead: (id: number | string) => void;
   onMarkAllNotificationsRead: () => void;
   onOpenLeaderboard: () => void;
+  onOpenNotificationsCenter?: () => void;
 }
 
 export const AdminNavbar: React.FC<AdminNavbarProps> = ({
@@ -22,7 +23,8 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
   notifications,
   onMarkNotificationRead,
   onMarkAllNotificationsRead,
-  onOpenLeaderboard
+  onOpenLeaderboard,
+  onOpenNotificationsCenter
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -166,6 +168,19 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
                       </div>
                     ))
                   )}
+                </div>
+
+                {/* Footer with link to full center */}
+                <div className="p-2.5 bg-gray-50 text-center border-t border-gray-100">
+                  <button
+                    onClick={() => {
+                      setShowNotifications(false);
+                      onOpenNotificationsCenter?.();
+                    }}
+                    className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center justify-center space-x-1.5 w-full py-0.5 hover:underline cursor-pointer"
+                  >
+                    <span>View All in Notifications Center →</span>
+                  </button>
                 </div>
               </div>
             )}

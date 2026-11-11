@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, FolderKanban, Settings, FileSearch, 
-  Shield, RefreshCw, Lock, Trophy 
+  Shield, RefreshCw, Lock, Trophy, Bell 
 } from 'lucide-react';
 import { adminApi } from './api';
 import { User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem, LeaderboardUser, Badge } from './types';
@@ -13,6 +13,7 @@ import { SystemConfigTab } from './components/tabs/SystemConfigTab';
 import { AuditLogTab } from './components/tabs/AuditLogTab';
 import { PersonalProjectTracker } from './components/PersonalProjectTracker';
 import { HallOfFameTab } from './components/tabs/HallOfFameTab';
+import { NotificationsTab } from './components/tabs/NotificationsTab';
 import { LeaderboardModal } from './components/LeaderboardModal';
 import { LogoutModal } from './components/LogoutModal';
 import { toast } from './context/ToastContext';
@@ -25,7 +26,7 @@ export function App() {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
 
   // Tab State
-  const [activeTab, setActiveTab] = useState<'USERS' | 'PROJECTS' | 'CONFIG' | 'AUDIT' | 'PERSONAL_PROJECTS' | 'HALL_OF_FAME'>('USERS');
+  const [activeTab, setActiveTab] = useState<'USERS' | 'PROJECTS' | 'CONFIG' | 'AUDIT' | 'PERSONAL_PROJECTS' | 'HALL_OF_FAME' | 'NOTIFICATIONS'>('USERS');
 
   // Core Data
   const [users, setUsers] = useState<User[]>([]);
@@ -53,7 +54,7 @@ export function App() {
     // 1. Real-Time SSE Stream
     const closeStream = adminApi.createNotificationStream((newNotif: NotificationItem) => {
       setNotifications(prev => {
-        if (prev.some(n => n.id === newNotif.id)) return prev;
+        if (prev.some(n => String(n.id) === String(newNotif.id) || (n._id && newNotif._id && String(n._id) === String(newNotif._id)))) return prev;
         return [newNotif, ...prev];
       });
     });
@@ -62,7 +63,16 @@ export function App() {
     const pollInterval = setInterval(async () => {
       try {
         const freshNotifs = await adminApi.getNotifications();
-        setNotifications(freshNotifs);
+        setNotifications(prev => {
+          // Robust merge: if a notification was marked read in local state, NEVER let background poll revert it to unread!
+          return freshNotifs.map(fn => {
+            const existing = prev.find(p => String(p.id) === String(fn.id) || (p._id && fn._id && String(p._id) === String(fn._id)));
+            if (existing && existing.readAt && !fn.readAt) {
+              return { ...fn, readAt: existing.readAt };
+            }
+            return fn;
+          });
+        });
       } catch (err) {
         // Continue silently on transient network hiccup
       }
@@ -133,10 +143,15 @@ export function App() {
     }
   };
 
-  const handleMarkNotificationRead = async (id: number) => {
+  const handleMarkNotificationRead = async (id: number | string) => {
     try {
+      const now = new Date().toISOString();
+      setNotifications(prev => prev.map(n => 
+        (String(n.id) === String(id) || (n._id && String(n._id) === String(id))) 
+          ? { ...n, readAt: n.readAt || now } 
+          : n
+      ));
       await adminApi.markNotificationRead(id);
-      setNotifications(prev => prev.map(n => n.id === id ? { ...n, readAt: new Date().toISOString() } : n));
     } catch (err) {
       console.error('Failed to mark notification read:', err);
     }
@@ -144,9 +159,9 @@ export function App() {
 
   const handleMarkAllNotificationsRead = async () => {
     try {
-      await adminApi.markAllNotificationsRead();
       const now = new Date().toISOString();
       setNotifications(prev => prev.map(n => ({ ...n, readAt: n.readAt || now })));
+      await adminApi.markAllNotificationsRead();
     } catch (err) {
       console.error('Failed to mark all notifications read:', err);
     }
@@ -192,6 +207,7 @@ export function App() {
         onMarkNotificationRead={handleMarkNotificationRead}
         onMarkAllNotificationsRead={handleMarkAllNotificationsRead}
         onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+        onOpenNotificationsCenter={() => setActiveTab('NOTIFICATIONS')}
       />
 
 
@@ -277,6 +293,21 @@ export function App() {
               <Trophy className="w-3.5 h-3.5 text-amber-500" />
               <span>6. Hall of Fame</span>
             </button>
+
+            <button
+              onClick={() => setActiveTab('NOTIFICATIONS')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border relative ${
+                activeTab === 'NOTIFICATIONS'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Bell className="w-3.5 h-3.5" />
+              <span>7. Notifications ({notifications.length})</span>
+              {notifications.some(n => !n.readAt) && (
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              )}
+            </button>
           </div>
         </div>
       </div>
@@ -309,6 +340,18 @@ export function App() {
             badges={badges}
             currentUser={currentUser}
             allUsers={users}
+          />
+        )}
+
+        {activeTab === 'NOTIFICATIONS' && (
+          <NotificationsTab
+            notifications={notifications}
+            onMarkNotificationRead={handleMarkNotificationRead}
+            onMarkAllNotificationsRead={handleMarkAllNotificationsRead}
+            onRefresh={loadAllAdminData}
+            onDeleteNotification={(id) => {
+              setNotifications(prev => prev.filter(n => String(n.id) !== String(id)));
+            }}
           />
         )}
       </main>

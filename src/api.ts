@@ -176,16 +176,20 @@ export const adminApi = {
   },
 
   // Notifications
-  getNotifications: async (): Promise<NotificationItem[]> => {
-    return request<NotificationItem[]>('/notifications');
+  getNotifications: async (all = true): Promise<NotificationItem[]> => {
+    return request<NotificationItem[]>(all ? '/notifications?all=true' : '/notifications');
   },
 
-  markNotificationRead: async (id: number): Promise<void> => {
+  markNotificationRead: async (id: number | string): Promise<void> => {
     await request(`/notifications/${id}/read`, { method: 'POST' });
   },
 
   markAllNotificationsRead: async (): Promise<void> => {
     await request('/notifications/read-all', { method: 'POST' });
+  },
+
+  deleteNotification: async (id: number | string): Promise<void> => {
+    await request(`/notifications/${id}`, { method: 'DELETE' });
   },
 
   createNotificationStream: (onNotification: (notif: NotificationItem) => void) => {

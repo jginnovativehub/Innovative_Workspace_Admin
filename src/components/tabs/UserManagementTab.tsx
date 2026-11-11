@@ -30,6 +30,8 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
   const [editRole, setEditRole] = useState<UserRole>('EMPLOYEE');
   const [editActive, setEditActive] = useState(true);
   const [editPassword, setEditPassword] = useState('');
+  const [editStreak, setEditStreak] = useState<number>(1);
+  const [editXp, setEditXp] = useState<number>(100);
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +60,8 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
     setEditRole(u.role);
     setEditActive(u.active);
     setEditPassword('');
+    setEditStreak(u.streakCount ?? 1);
+    setEditXp(u.xp ?? 100);
   };
 
   const handleSaveEdit = async (e: React.FormEvent) => {
@@ -68,7 +72,9 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
         fullName: editName,
         department: editDept,
         role: editRole,
-        active: editActive
+        active: editActive,
+        streakCount: Number(editStreak),
+        xp: Number(editXp)
       };
       if (editPassword.trim()) {
         payload.password = editPassword.trim();
@@ -377,6 +383,35 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
                     value={editDept}
                     onChange={e => setEditDept(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    On-Time Streak (Weeks)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={52}
+                    value={editStreak}
+                    onChange={e => setEditStreak(Math.max(0, parseInt(e.target.value) || 0))}
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Innovation XP Total
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={editXp}
+                    onChange={e => setEditXp(Math.max(0, parseInt(e.target.value) || 0))}
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
               </div>
