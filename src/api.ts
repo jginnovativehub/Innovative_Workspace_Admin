@@ -1,7 +1,7 @@
 import { 
   User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem,
   PersonalProject, PersonalMilestone, PersonalTask,
-  Badge, LeaderboardUser
+  Badge, LeaderboardUser, AttendanceRecord, AttendanceSummary, HolidayRecord, WeekendPolicy
 } from './types';
 
 const rawApiUrl = (import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).trim() : '');
@@ -288,6 +288,80 @@ export const adminApi = {
 
   getBadges: async (): Promise<Badge[]> => {
     return request<Badge[]>('/gamification/badges');
+  },
+
+  // Attendance & Workforce Roster
+  getAttendance: async (params?: { userId?: number; month?: string; date?: string }): Promise<AttendanceRecord[]> => {
+    const query = new URLSearchParams();
+    if (params?.userId) query.append('userId', String(params.userId));
+    if (params?.month) query.append('month', params.month);
+    if (params?.date) query.append('date', params.date);
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return request<AttendanceRecord[]>(`/attendance${qs}`);
+  },
+
+  getAttendanceSummary: async (params?: { userId?: number; month?: string }): Promise<AttendanceSummary> => {
+    const query = new URLSearchParams();
+    if (params?.userId) query.append('userId', String(params.userId));
+    if (params?.month) query.append('month', params.month);
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return request<AttendanceSummary>(`/attendance/summary${qs}`);
+  },
+
+  markAttendance: async (data: { date?: string; status?: string; comment?: string; userId?: number }): Promise<{ record: AttendanceRecord; message: string; xpAwarded?: number }> => {
+    return request<{ record: AttendanceRecord; message: string; xpAwarded?: number }>('/attendance', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  updateAttendance: async (id: string | number, data: { status?: string; comment?: string }): Promise<AttendanceRecord> => {
+    return request<AttendanceRecord>(`/attendance/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  },
+
+  deleteAttendance: async (id: string | number): Promise<{ message: string; deletedId: string | number }> => {
+    return request<{ message: string; deletedId: string | number }>(`/attendance/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  // Holidays & Weekend Policy (Admin, CEO, COO)
+  getHolidays: async (): Promise<{ holidays: HolidayRecord[]; weekendPolicy: WeekendPolicy }> => {
+    return request<{ holidays: HolidayRecord[]; weekendPolicy: WeekendPolicy }>('/holidays');
+  },
+
+  createHoliday: async (data: { date: string; title: string; description?: string; type?: string }): Promise<{ status: string; holiday: HolidayRecord; message?: string }> => {
+    return request<{ status: string; holiday: HolidayRecord; message?: string }>('/holidays', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  updateHoliday: async (id: number | string, data: Partial<HolidayRecord>): Promise<{ status: string; holiday: HolidayRecord }> => {
+    return request<{ status: string; holiday: HolidayRecord }>(`/holidays/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  },
+
+  deleteHoliday: async (id: number | string): Promise<{ status: string; message: string }> => {
+    return request<{ status: string; message: string }>(`/holidays/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  getWeekendPolicy: async (): Promise<{ status: string; weekendPolicy: WeekendPolicy }> => {
+    return request<{ status: string; weekendPolicy: WeekendPolicy }>('/holidays/weekend-policy');
+  },
+
+  updateWeekendPolicy: async (data: Partial<WeekendPolicy>): Promise<{ status: string; weekendPolicy: WeekendPolicy; message?: string }> => {
+    return request<{ status: string; weekendPolicy: WeekendPolicy; message?: string }>('/holidays/weekend-policy', {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
   }
 };
 

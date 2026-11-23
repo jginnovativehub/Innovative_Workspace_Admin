@@ -175,5 +175,65 @@ export interface PersonalProject {
   updatedAt?: string;
 }
 
+export interface AttendanceRecord {
+  id: number | string;
+  _id?: string;
+  userId: number;
+  userName?: string;
+  userEmail?: string;
+  department?: string;
+  role?: string;
+  date: string; // YYYY-MM-DD
+  status: 'PRESENT' | 'HALF_DAY' | 'ON_LEAVE' | 'ABSENT';
+  comment?: string;
+  markedAt: string;
+  markedBy?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AttendanceSummary {
+  month: string;
+  today: string;
+  isMarkedToday: boolean;
+  todayRecord: AttendanceRecord | null;
+  stats: {
+    totalMarked: number;
+    present: number;
+    halfDay: number;
+    leave: number;
+    absent: number;
+  };
+  companyOverview?: {
+    totalEmployees: number;
+    presentToday: number;
+    onLeaveToday: number;
+    notMarkedToday: number;
+    attendanceRateToday: number;
+  };
+}
+
+export interface HolidayRecord {
+  id: number | string;
+  _id?: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  description?: string;
+  type?: 'PUBLIC_HOLIDAY' | 'COMPANY_HOLIDAY' | 'FESTIVAL' | 'OPTIONAL_HOLIDAY';
+  createdBy?: number;
+  createdAt?: string;
+}
+
+export interface WeekendPolicy {
+  id?: number;
+  saturdayHoliday: boolean;
+  sundayHoliday: boolean;
+  saturdayType?: 'ALL_OFF' | 'ALTERNATE_OFF' | 'WORKING';
+  updatedBy?: number;
+  updatedAt?: string;
+}
+
+
+
 
 

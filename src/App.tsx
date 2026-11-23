@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, FolderKanban, Settings, FileSearch, 
-  Shield, RefreshCw, Lock, Trophy, Bell 
+  Shield, RefreshCw, Lock, Trophy, Bell, CalendarCheck 
 } from 'lucide-react';
 import { adminApi } from './api';
 import { User, Project, SystemConfig, AuditEvent, MongoStatus, NotificationItem, LeaderboardUser, Badge } from './types';
@@ -14,6 +14,7 @@ import { AuditLogTab } from './components/tabs/AuditLogTab';
 import { PersonalProjectTracker } from './components/PersonalProjectTracker';
 import { HallOfFameTab } from './components/tabs/HallOfFameTab';
 import { NotificationsTab } from './components/tabs/NotificationsTab';
+import { AttendanceTab } from './components/tabs/AttendanceTab';
 import { LeaderboardModal } from './components/LeaderboardModal';
 import { LogoutModal } from './components/LogoutModal';
 import { toast } from './context/ToastContext';
@@ -26,7 +27,7 @@ export function App() {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
 
   // Tab State
-  const [activeTab, setActiveTab] = useState<'USERS' | 'PROJECTS' | 'CONFIG' | 'AUDIT' | 'PERSONAL_PROJECTS' | 'HALL_OF_FAME' | 'NOTIFICATIONS'>('USERS');
+  const [activeTab, setActiveTab] = useState<'USERS' | 'PROJECTS' | 'CONFIG' | 'AUDIT' | 'PERSONAL_PROJECTS' | 'HALL_OF_FAME' | 'NOTIFICATIONS' | 'ATTENDANCE'>('USERS');
 
   // Core Data
   const [users, setUsers] = useState<User[]>([]);
@@ -308,6 +309,18 @@ export function App() {
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
               )}
             </button>
+
+            <button
+              onClick={() => setActiveTab('ATTENDANCE')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+                activeTab === 'ATTENDANCE'
+                  ? 'bg-red-600 text-white border-red-600 shadow-xs'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <CalendarCheck className="w-3.5 h-3.5" />
+              <span>8. Attendance & Roster</span>
+            </button>
           </div>
         </div>
       </div>
@@ -352,6 +365,13 @@ export function App() {
             onDeleteNotification={(id) => {
               setNotifications(prev => prev.filter(n => String(n.id) !== String(id)));
             }}
+          />
+        )}
+
+        {activeTab === 'ATTENDANCE' && (
+          <AttendanceTab
+            users={users}
+            onUserMutated={loadAllAdminData}
           />
         )}
       </main>
