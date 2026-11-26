@@ -77,10 +77,10 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         </div>
 
         {/* Tab Selector */}
-        <div className="flex border-b border-gray-200 px-6 pt-2 bg-gray-50/60">
+        <div className="flex border-b border-gray-200 px-4 sm:px-6 pt-2 bg-gray-50/60 overflow-x-auto no-scrollbar shrink-0">
           <button
             onClick={() => setActiveTab('LEADERBOARD')}
-            className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center space-x-2 ${
+            className={`pb-3 px-3 sm:px-4 text-xs font-bold border-b-2 transition-all flex items-center space-x-2 whitespace-nowrap shrink-0 ${
               activeTab === 'LEADERBOARD'
                 ? 'border-indigo-600 text-indigo-700 font-bold'
                 : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -91,7 +91,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('BADGES')}
-            className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center space-x-2 ${
+            className={`pb-3 px-3 sm:px-4 text-xs font-bold border-b-2 transition-all flex items-center space-x-2 whitespace-nowrap shrink-0 ${
               activeTab === 'BADGES'
                 ? 'border-indigo-600 text-indigo-700 font-bold'
                 : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -103,63 +103,63 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           {activeTab === 'LEADERBOARD' ? (
             <div className="space-y-3">
-              <div className="text-xs text-gray-600 flex items-center justify-between pb-2 px-3 border-b border-gray-200 font-semibold uppercase tracking-wider">
-                <span className="w-12">Rank</span>
-                <span className="flex-1">Innovator</span>
-                <span className="w-24 text-center">Streak</span>
-                <span className="w-24 text-center">Tasks Done</span>
-                <span className="w-28 text-right">Total XP</span>
+              <div className="text-[11px] sm:text-xs text-gray-600 flex items-center justify-between pb-2 px-2 sm:px-3 border-b border-gray-200 font-semibold uppercase tracking-wider gap-2">
+                <span className="w-8 sm:w-12 shrink-0">Rank</span>
+                <span className="flex-1 min-w-0">Innovator</span>
+                <span className="w-12 sm:w-20 text-center shrink-0">Streak</span>
+                <span className="hidden sm:block w-24 text-center shrink-0">Tasks Done</span>
+                <span className="w-20 sm:w-28 text-right shrink-0">Total XP</span>
               </div>
               {leaderboard.map(u => {
                 const isMe = u.id === currentUser.id;
                 return (
                   <div
                     key={u.id}
-                    className={`flex items-center justify-between p-3.5 rounded-xl border transition-all ${
+                    className={`flex items-center justify-between p-2.5 sm:p-3.5 rounded-xl border transition-all gap-2 ${
                       isMe 
                         ? 'bg-blue-50/70 border-blue-300 shadow-xs' 
                         : 'bg-white border-gray-200 hover:bg-gray-50'
                     }`}
                   >
-                    <div className="w-12 flex items-center">
+                    <div className="w-8 sm:w-12 flex items-center shrink-0">
                       {getRankBadge(u.rank)}
                     </div>
 
-                    <div className="flex-1 flex items-center space-x-3">
-                      <div className="w-9 h-9 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center font-bold text-xs text-blue-700">
+                    <div className="flex-1 min-w-0 flex items-center space-x-2.5 sm:space-x-3">
+                      <div className="hidden sm:flex w-9 h-9 rounded-full bg-blue-100 border border-blue-200 items-center justify-center font-bold text-xs text-blue-700 shrink-0">
                         {u.fullName.split(' ').map(n => n[0]).join('')}
                       </div>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <span className="font-bold text-sm text-gray-900">{u.fullName}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center space-x-1.5">
+                          <span className="font-bold text-xs sm:text-sm text-gray-900 truncate">{u.fullName}</span>
                           {isMe && (
-                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-blue-100 text-blue-700 border border-blue-200">
+                            <span className="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.2 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">
                               YOU
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center space-x-2 mt-0.5">
-                          <span className="text-xs text-indigo-700 font-semibold">{u.avatarTitle}</span>
+                        <div className="flex items-center space-x-1.5 mt-0.5 text-[10px] sm:text-xs truncate">
+                          <span className="text-indigo-700 font-semibold truncate">{u.avatarTitle}</span>
                           <span className="text-gray-400">•</span>
-                          <span className="text-[11px] text-gray-600">{u.department}</span>
+                          <span className="text-gray-600 truncate">{u.department}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="w-24 flex items-center justify-center text-xs font-bold text-amber-700">
-                      <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500 mr-1" />
+                    <div className="w-12 sm:w-20 flex items-center justify-center text-xs font-bold text-amber-700 shrink-0">
+                      <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500 mr-0.5 sm:mr-1 shrink-0" />
                       <span>{u.streakCount}w</span>
                     </div>
 
-                    <div className="w-24 text-center text-xs font-semibold text-gray-700">
+                    <div className="hidden sm:block w-24 text-center text-xs font-semibold text-gray-700 shrink-0">
                       {u.completedTasksCount}
                     </div>
 
-                    <div className="w-28 text-right">
-                      <span className="text-sm font-extrabold text-blue-700 font-mono block">
+                    <div className="w-20 sm:w-28 text-right shrink-0">
+                      <span className="text-xs sm:text-sm font-extrabold text-blue-700 font-mono block">
                         {u.xp.toLocaleString()} XP
                       </span>
                       <span className="text-[10px] text-gray-600">Level {u.level}</span>

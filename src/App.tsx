@@ -222,10 +222,10 @@ export function App() {
             </span>
           </div>
 
-          <div className="flex items-center space-x-2 overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
             <button
               onClick={() => setActiveTab('USERS')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border whitespace-nowrap shrink-0 ${
                 activeTab === 'USERS'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -237,7 +237,7 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('PROJECTS')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border whitespace-nowrap shrink-0 ${
                 activeTab === 'PROJECTS'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -249,7 +249,7 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('CONFIG')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border whitespace-nowrap shrink-0 ${
                 activeTab === 'CONFIG'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -261,7 +261,7 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('AUDIT')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border whitespace-nowrap shrink-0 ${
                 activeTab === 'AUDIT'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -273,7 +273,7 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('PERSONAL_PROJECTS')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border whitespace-nowrap shrink-0 ${
                 activeTab === 'PERSONAL_PROJECTS'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -285,7 +285,7 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('HALL_OF_FAME')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border whitespace-nowrap shrink-0 ${
                 activeTab === 'HALL_OF_FAME'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -297,7 +297,7 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('NOTIFICATIONS')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border relative ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border relative whitespace-nowrap shrink-0 ${
                 activeTab === 'NOTIFICATIONS'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -312,7 +312,7 @@ export function App() {
 
             <button
               onClick={() => setActiveTab('ATTENDANCE')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 border whitespace-nowrap shrink-0 ${
                 activeTab === 'ATTENDANCE'
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'

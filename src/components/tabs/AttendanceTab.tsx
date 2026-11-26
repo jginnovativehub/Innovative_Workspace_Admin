@@ -322,17 +322,17 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
   return (
     <div className="space-y-6 text-left">
       {/* Top Header Card */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center space-x-2 mb-1.5">
-            <span className="p-2 bg-red-100 text-red-700 rounded-xl">
+      <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+            <span className="p-2 bg-red-100 text-red-700 rounded-xl shrink-0">
               <CalendarDays className="w-5 h-5" />
             </span>
             <span className="text-xs uppercase tracking-wider font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full">
               Workforce Governance
             </span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 tracking-tight">
             Workforce Attendance & Roll-Call Central
           </h2>
           <p className="text-xs text-gray-600 mt-1">
@@ -510,10 +510,10 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
       </div>
 
       {/* View Switcher Tabs */}
-      <div className="flex border-b border-gray-200 gap-4">
+      <div className="flex border-b border-gray-200 gap-4 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setViewMode('ROLL_CALL')}
-          className={`pb-3 text-xs font-bold transition-colors flex items-center space-x-2 border-b-2 ${
+          className={`pb-3 text-xs font-bold transition-colors flex items-center space-x-2 border-b-2 whitespace-nowrap shrink-0 ${
             viewMode === 'ROLL_CALL'
               ? 'border-red-600 text-red-600'
               : 'border-transparent text-gray-500 hover:text-gray-800'
@@ -525,7 +525,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
 
         <button
           onClick={() => setViewMode('CALENDAR')}
-          className={`pb-3 text-xs font-bold transition-colors flex items-center space-x-2 border-b-2 ${
+          className={`pb-3 text-xs font-bold transition-colors flex items-center space-x-2 border-b-2 whitespace-nowrap shrink-0 ${
             viewMode === 'CALENDAR'
               ? 'border-red-600 text-red-600'
               : 'border-transparent text-gray-500 hover:text-gray-800'
@@ -714,12 +714,12 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
               </div>
             </div>
 
-            <div className="flex items-center space-x-3">
-              <label className="text-xs font-semibold text-gray-600">Inspect Employee:</label>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
+              <label className="text-xs font-semibold text-gray-600 shrink-0">Inspect Employee:</label>
               <select
                 value={selectedUserId}
                 onChange={e => setSelectedUserId(Number(e.target.value))}
-                className="bg-gray-50 border border-gray-300 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-800 focus:outline-none focus:ring-1 focus:ring-red-500"
+                className="w-full sm:w-auto max-w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-800 focus:outline-none focus:ring-1 focus:ring-red-500"
               >
                 {users.map(u => (
                   <option key={u.id} value={u.id}>
@@ -732,14 +732,14 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
 
           {/* Monthly Calendar Grid */}
           <div className="bg-white border-2 border-gray-300 rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-4 sm:p-5 bg-gray-50 border-b-2 border-gray-300 flex items-center justify-between">
+            <div className="p-4 sm:p-5 bg-gray-50 border-b-2 border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center space-x-2">
-                <CalendarIcon className="w-5 h-5 text-red-600" />
-                <h3 className="font-bold text-gray-900 text-base">
+                <CalendarIcon className="w-5 h-5 text-red-600 shrink-0" />
+                <h3 className="font-bold text-gray-900 text-sm sm:text-base">
                   {monthDisplayName} Calendar Grid
                 </h3>
               </div>
-              <div className="flex items-center space-x-3 text-xs text-gray-500">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
                 <span className="flex items-center space-x-1">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
                   <span>Present</span>
@@ -756,17 +756,17 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
             </div>
 
             {/* Days of week */}
-            <div className="grid grid-cols-7 border-b-2 border-gray-300 bg-gray-100 divide-x divide-gray-300 text-center text-xs font-bold text-gray-700 py-3 tracking-wider uppercase mb-0">
+            <div className="grid grid-cols-7 border-b-2 border-gray-300 bg-gray-100 divide-x divide-gray-300 text-center text-[10px] sm:text-xs font-bold text-gray-700 py-2 sm:py-3 tracking-wider uppercase mb-0">
               <div className="py-0.5">Mon</div>
               <div className="py-0.5">Tue</div>
               <div className="py-0.5">Wed</div>
               <div className="py-0.5">Thu</div>
               <div className="py-0.5">Fri</div>
               <div className={`py-0.5 ${weekendPolicy.saturdayHoliday ? 'text-rose-600 bg-rose-50/50' : 'text-gray-700'}`}>
-                Sat {weekendPolicy.saturdayHoliday ? '(Off)' : ''}
+                Sat <span className="hidden sm:inline">{weekendPolicy.saturdayHoliday ? '(Off)' : ''}</span>
               </div>
               <div className={`py-0.5 ${weekendPolicy.sundayHoliday ? 'text-rose-600 bg-rose-50/50' : 'text-gray-700'}`}>
-                Sun {weekendPolicy.sundayHoliday ? '(Off)' : ''}
+                Sun <span className="hidden sm:inline">{weekendPolicy.sundayHoliday ? '(Off)' : ''}</span>
               </div>
             </div>
 
@@ -774,7 +774,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
             <div className="grid grid-cols-7 gap-[1px] bg-gray-300">
               {/* Empty leading offset cells */}
               {Array.from({ length: startOffset }).map((_, i) => (
-                <div key={`empty-${i}`} className="min-h-[105px] sm:min-h-[120px] bg-gray-100/70 p-2.5 opacity-60" />
+                <div key={`empty-${i}`} className="min-h-[68px] sm:min-h-[120px] bg-gray-100/70 p-1 sm:p-2.5 opacity-60 min-w-0 overflow-hidden" />
               ))}
 
               {/* Day cells */}
@@ -798,7 +798,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
                       setInspectComment(record?.comment || '');
                       setInspectStatus((record?.status as any) || 'PRESENT');
                     }}
-                    className={`min-h-[105px] sm:min-h-[120px] p-2.5 transition-all cursor-pointer flex flex-col justify-between group ${
+                    className={`min-h-[68px] sm:min-h-[120px] p-1 sm:p-2.5 min-w-0 overflow-hidden transition-all cursor-pointer flex flex-col justify-between group ${
                       isToday
                         ? 'bg-red-50/40 ring-2 ring-red-600 ring-inset z-10'
                         : holiday
@@ -814,8 +814,8 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
                         : 'bg-white hover:bg-gray-50'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className={`text-xs font-bold flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-lg transition-colors ${
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 items-center">
+                      <span className={`text-[11px] sm:text-xs font-bold flex items-center justify-center min-w-[22px] sm:min-w-[24px] h-5 sm:h-6 px-1 sm:px-1.5 rounded-md sm:rounded-lg transition-colors shrink-0 ${
                         isToday 
                           ? 'text-white bg-red-600 shadow-xs' 
                           : holiday
@@ -827,24 +827,45 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
                         {dayNum}
                       </span>
                       {holiday ? (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-100 text-purple-800 border border-purple-300 flex items-center space-x-1 shrink-0">
-                          <Sparkles className="w-2.5 h-2.5 text-purple-600" />
-                          <span>Holiday</span>
+                        <span className="text-[9px] sm:text-[10px] font-bold px-1 sm:px-2 py-0.5 rounded-md bg-purple-100 text-purple-800 border border-purple-300 flex items-center space-x-1 shrink-0 max-w-full">
+                          <Sparkles className="w-2.5 h-2.5 text-purple-600 shrink-0" />
+                          <span className="hidden sm:inline">Holiday</span>
                         </span>
                       ) : record ? (
-                        renderStatusBadge(record.status, 'sm')
+                        <>
+                          <span className="hidden sm:inline-flex">{renderStatusBadge(record.status, 'sm')}</span>
+                          <span className={`sm:hidden text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
+                            record.status === 'PRESENT' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
+                            record.status === 'HALF_DAY' ? 'bg-amber-100 text-amber-800 border border-amber-300' :
+                            record.status === 'ON_LEAVE' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
+                            'bg-rose-100 text-rose-800 border border-rose-300'
+                          }`}>
+                            {record.status === 'PRESENT' ? 'P' : record.status === 'HALF_DAY' ? 'HD' : record.status === 'ON_LEAVE' ? 'L' : 'A'}
+                          </span>
+                        </>
                       ) : isWeekendOff ? (
-                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-gray-200/80 text-gray-600 border border-gray-300">
-                          {isSunday ? 'Sun Off' : 'Sat Off'}
+                        <span className="text-[9px] sm:text-[10px] font-semibold px-1 sm:px-1.5 py-0.5 rounded bg-gray-200/80 text-gray-600 border border-gray-300 truncate max-w-full">
+                          <span className="sm:hidden">Off</span>
+                          <span className="hidden sm:inline">{isSunday ? 'Sun Off' : 'Sat Off'}</span>
                         </span>
                       ) : null}
                     </div>
 
-                    <div className="my-1.5 flex-1 space-y-1">
+                    {/* Mobile Compact Indicator Dots */}
+                    <div className="sm:hidden flex items-center justify-center gap-1 mt-1 min-h-[10px]">
+                      {record?.comment && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      )}
+                      {holiday && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                      )}
+                    </div>
+
+                    <div className="hidden sm:block my-1.5 flex-1 space-y-1">
                       {holiday && (
                         <div className="text-[11px] font-bold text-purple-900 bg-purple-100/90 border border-purple-200 rounded-lg px-2 py-1 line-clamp-1 flex items-center space-x-1.5 shadow-2xs">
                           <PartyPopper className="w-3 h-3 text-purple-600 shrink-0" />
-                          <span>{holiday.title}</span>
+                          <span className="truncate">{holiday.title}</span>
                         </div>
                       )}
                       {record?.comment ? (
@@ -874,7 +895,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
       {/* MODAL 1: RECORD OR EDIT ATTENDANCE ON BEHALF */}
       {isRecordModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-gray-200 text-left space-y-4 animate-in fade-in zoom-in duration-150">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-xl border border-gray-200 text-left space-y-4 animate-in fade-in zoom-in duration-150 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-gray-200">
               <div className="flex items-center space-x-2">
                 <span className="p-1.5 bg-red-100 text-red-700 rounded-lg">
@@ -985,7 +1006,7 @@ export const AttendanceTab: React.FC<AttendanceTabProps> = ({ users, onUserMutat
       {/* MODAL 2: INSPECT / EDIT DAY DETAIL IN CALENDAR VIEW */}
       {selectedDayRecord && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-gray-200 text-left space-y-4 animate-in fade-in zoom-in duration-150">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-xl border border-gray-200 text-left space-y-4 animate-in fade-in zoom-in duration-150 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-gray-200">
               <div className="flex items-center space-x-2">
                 <span className="p-1.5 bg-red-100 text-red-700 rounded-lg">

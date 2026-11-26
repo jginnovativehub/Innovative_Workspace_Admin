@@ -49,32 +49,32 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200 text-gray-900 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
         {/* Brand */}
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs shrink-0 border border-gray-200 overflow-hidden">
+        <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs shrink-0 border border-gray-200 overflow-hidden">
             <img src={logoImg} alt="Innovative Hub" className="w-full h-full object-contain" />
           </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-base text-gray-900 tracking-tight">
+          <div className="min-w-0">
+            <div className="flex items-center space-x-1.5 sm:space-x-2">
+              <span className="font-bold text-xs sm:text-base text-gray-900 tracking-tight truncate">
                 INNOVATIVE HUB
               </span>
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200">
+              <span className="text-[9px] sm:text-[10px] uppercase font-bold px-1.5 sm:px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 shrink-0">
                 ADMIN
               </span>
             </div>
-            <p className="text-xs text-gray-500">Platform Governance & Master Controls</p>
+            <p className="hidden sm:block text-xs text-gray-500 truncate">Platform Governance & Master Controls</p>
           </div>
         </div>
 
         {/* Right Action Icons */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
           {/* Refresh Button */}
           <button
             onClick={onRefreshAll}
             disabled={refreshing}
-            className="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 transition-colors"
+            className="p-1.5 sm:p-2 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 transition-colors"
             title="Refresh System Data"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
@@ -83,7 +83,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
           {/* Hall of Fame / Leaderboard Button */}
           <button
             onClick={onOpenLeaderboard}
-            className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 transition-colors shadow-xs"
+            className="flex items-center space-x-1.5 p-1.5 sm:px-3 sm:py-1.5 text-xs font-semibold rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 transition-colors shadow-xs"
             title="Innovation Hall of Fame & Badges"
           >
             <Trophy className="w-4 h-4 text-amber-600" />
@@ -94,7 +94,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-red-300 text-gray-700 transition-colors"
+              className="relative p-1.5 sm:p-2 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-red-300 text-gray-700 transition-colors"
               title="Admin Alerts & Live Notifications"
             >
               <Bell className="w-4 h-4" />
@@ -107,7 +107,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
 
             {/* Notification Dropdown HUD */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden divide-y divide-gray-100">
+              <div className="fixed inset-x-3 top-16 sm:inset-x-auto sm:top-auto sm:absolute sm:right-0 sm:mt-2 w-auto sm:w-96 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden divide-y divide-gray-100">
                 {/* Header */}
                 <div className="p-3.5 bg-gray-50 flex items-center justify-between border-b border-gray-200">
                   <div className="flex items-center space-x-2">
@@ -187,7 +187,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
           </div>
 
           {/* User Profile Tag */}
-          <div className="flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200">
+          <div className="hidden sm:flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200">
             <div className="w-7 h-7 rounded-md bg-red-100 text-red-700 border border-red-200 flex items-center justify-center text-xs font-bold">
               <Shield className="w-3.5 h-3.5" />
             </div>
@@ -200,7 +200,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
           {/* Logout */}
           <button
             onClick={onLogout}
-            className="p-2 rounded-lg bg-gray-50 hover:bg-red-50 border border-gray-200 hover:border-red-200 text-gray-600 hover:text-red-700 transition-colors cursor-pointer"
+            className="p-1.5 sm:p-2 rounded-lg bg-gray-50 hover:bg-red-50 border border-gray-200 hover:border-red-200 text-gray-600 hover:text-red-700 transition-colors cursor-pointer"
             title="Log Out"
           >
             <LogOut className="w-4 h-4" />

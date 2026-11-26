@@ -54,9 +54,9 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-  // Never intercept or cache API calls, auth checks, or SSE notification streams
+  // Never intercept or cache API calls, auth checks, .well-known verification files, or SSE streams
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith('/api/') || url.pathname === '/health') return;
+  if (url.pathname.startsWith('/api/') || url.pathname === '/health' || url.pathname.startsWith('/.well-known/')) return;
 
   // Navigation requests: Network-first with offline fallback page
   if (request.mode === 'navigate') {

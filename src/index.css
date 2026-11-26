@@ -27,14 +27,26 @@ input[type="submit"]:disabled,
 }
 
 @layer base {
+  html,
   body {
     margin: 0;
     padding: 0;
+    max-width: 100%;
+    overflow-x: hidden;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: #f8fafc;
     color: #0f172a;
-    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
+}
+
+/* Hide scrollbars cleanly for horizontal mobile tab bars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom scrollbars */

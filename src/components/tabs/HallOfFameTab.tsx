@@ -118,10 +118,10 @@ export const HallOfFameTab: React.FC<HallOfFameTabProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <button
             onClick={() => setActiveSubTab('LEADERBOARD')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 border ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 border whitespace-nowrap ${
               activeSubTab === 'LEADERBOARD'
                 ? 'bg-red-600 text-white border-red-600 shadow-xs'
                 : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -132,7 +132,7 @@ export const HallOfFameTab: React.FC<HallOfFameTabProps> = ({
           </button>
           <button
             onClick={() => setActiveSubTab('BADGES')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 border ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 border whitespace-nowrap ${
               activeSubTab === 'BADGES'
                 ? 'bg-red-600 text-white border-red-600 shadow-xs'
                 : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'

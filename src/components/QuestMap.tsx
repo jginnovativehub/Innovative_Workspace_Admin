@@ -283,16 +283,18 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
       </div>
 
       {/* ---------------------------------------------------------------------
-          VIEW MODE 1: VERTICAL CANDY CRUSH-STYLE WINDING EXPEDITION ROAD
-          Naturally scrollable with the mouse wheel (Zero horizontal scroll!)
+          VIEW MODE 1: VERTICAL EXPEDITION ROAD
+          Mobile (< md): Crisp responsive vertical timeline trail
+          Tablet/Desktop (md+): Candy Crush-style winding serpentine S-curve
       --------------------------------------------------------------------- */}
       {viewMode === 'MAP' && (
-        <div className="relative z-10 py-6 overflow-x-hidden">
+        <div className="relative z-10 py-4 sm:py-6 overflow-x-hidden">
           {/* Mouse Wheel Traversal Hint & Optional Focus Action */}
           <div className="flex items-center justify-center gap-3 pb-4 flex-wrap">
-            <span className="flex items-center space-x-2 text-cyan-400 font-mono text-xs bg-slate-900/90 px-4 py-1.5 rounded-full border border-cyan-500/30 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-              <span>Scroll freely with your mouse wheel to traverse the expedition road</span>
+            <span className="flex items-center space-x-2 text-cyan-400 font-mono text-[11px] sm:text-xs bg-slate-900/90 px-3 sm:px-4 py-1.5 rounded-full border border-cyan-500/30 shadow-xs text-center">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
+              <span className="hidden md:inline">Scroll freely with your mouse wheel to traverse the expedition road</span>
+              <span className="md:hidden">Tap any checkpoint below to inspect</span>
             </span>
             {activeCoord && (
               <button
@@ -307,10 +309,76 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
             )}
           </div>
 
-          {/* Centralized Vertical Road Stage Container */}
+          {/* Mobile Vertical Timeline Trail (Zero horizontal clipping on phones) */}
+          <div className="md:hidden space-y-4">
+            <div className="inline-flex items-center space-x-2 bg-slate-900/90 border border-slate-700 px-3 py-1.5 rounded-full text-[11px] font-mono font-bold text-slate-300 shadow-md">
+              <Flag className="w-3.5 h-3.5 text-cyan-400" />
+              <span>EXPEDITION BASECAMP • START</span>
+            </div>
+
+            <div className="relative pl-4 space-y-4">
+              <div className="absolute left-7 top-3 bottom-3 w-1 bg-gradient-to-b from-emerald-500/60 via-cyan-500/60 to-slate-700 rounded-full" />
+              {stages.map((st, idx) => {
+                const isCompleted = st.status === 'APPROVED_COMPLETED';
+                const isActive = idx === activeStageIndex;
+                const isSelected = inspectedStage?.id === st.id;
+
+                return (
+                  <div
+                    key={`mobile-${st.id}`}
+                    onClick={() => handleNodeClick(st)}
+                    className="relative flex items-start gap-3 cursor-pointer"
+                  >
+                    <div className={`relative z-10 w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-2 border-2 text-xs font-black font-mono ${
+                      isCompleted
+                        ? 'bg-emerald-600 border-emerald-200 text-white shadow-[0_0_12px_rgba(16,185,129,0.5)]'
+                        : isActive
+                        ? 'bg-cyan-500 border-cyan-100 text-white shadow-[0_0_14px_rgba(6,182,212,0.8)]'
+                        : 'bg-slate-800 border-slate-600 text-slate-300'
+                    }`}>
+                      {isCompleted ? <Check className="w-3.5 h-3.5" /> : st.sequence}
+                    </div>
+
+                    <div className={`flex-1 min-w-0 p-3.5 rounded-2xl border transition-all ${
+                      isSelected
+                        ? 'bg-slate-900/95 border-cyan-400 shadow-[0_0_18px_rgba(6,182,212,0.35)]'
+                        : isCompleted
+                        ? 'bg-slate-950/85 border-emerald-500/40'
+                        : isActive
+                        ? 'bg-slate-950/95 border-cyan-500/70'
+                        : 'bg-slate-950/60 border-slate-800'
+                    }`}>
+                      <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1">
+                        <span className="text-[10px] font-mono font-bold text-cyan-300 uppercase">
+                          Stage {st.sequence} {isActive ? '• ACTIVE' : ''}
+                        </span>
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${
+                          isCompleted ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' :
+                          isActive ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' :
+                          'bg-slate-800 text-slate-400 border-slate-700'
+                        }`}>
+                          {st.status === 'APPROVED_COMPLETED' ? 'Conquered' : st.status.replace(/_/g, ' ')}
+                        </span>
+                      </div>
+                      <h4 className="text-xs font-bold text-white leading-snug">{st.title}</h4>
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 mt-2 border-t border-slate-800/80 text-[11px] font-mono">
+                        <span className="text-amber-400 font-bold flex items-center space-x-1">
+                          <Flame className="w-3 h-3 fill-amber-400" />
+                          <span>+{st.xpReward || 300} XP</span>
+                        </span>
+                        <span className="text-slate-400">Due: {st.dueDate || 'Friday'}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Centralized Vertical Road Stage Container (Tablet & Desktop) */}
           <div 
             ref={mapContainerRef}
-            className="relative mx-auto max-w-2xl w-full" 
+            className="hidden md:block relative mx-auto max-w-2xl w-full" 
             style={{ height: `${totalHeight}px` }}
           >
             {/* SVG Winding Road Track Layer */}
@@ -836,7 +904,7 @@ export const ProjectExpeditionRoadmap: React.FC<ProjectExpeditionRoadmapProps> =
             </div>
 
             {/* Stage Right Actions Cockpit */}
-            <div className="flex flex-col gap-3 min-w-[220px] shrink-0">
+            <div className="flex flex-col gap-3 w-full lg:w-auto lg:min-w-[220px] shrink-0">
               {/* Personal Project Direct Checkpoint Toggle */}
               {isPersonalProject ? (
                 inspectedStage.status === 'APPROVED_COMPLETED' ? (

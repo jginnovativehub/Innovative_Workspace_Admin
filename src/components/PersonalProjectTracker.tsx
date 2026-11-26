@@ -456,12 +456,12 @@ export const PersonalProjectTracker: React.FC<PersonalProjectTrackerProps> = ({
                 <span>Back to Grid</span>
               </button>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                 <span className="text-xs text-slate-400 font-medium">Expedition Project:</span>
                 <select
                   value={activeQuestProject?.id || ''}
                   onChange={e => setSelectedQuestProjectId(Number(e.target.value))}
-                  className="bg-slate-950 border border-slate-700 text-cyan-400 font-bold text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-cyan-500 cursor-pointer"
+                  className="w-full sm:w-auto max-w-full bg-slate-950 border border-slate-700 text-cyan-400 font-bold text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-cyan-500 cursor-pointer"
                 >
                   {projects.map(p => (
                     <option key={p.id} value={p.id}>
@@ -579,11 +579,11 @@ export const PersonalProjectTracker: React.FC<PersonalProjectTrackerProps> = ({
           />
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2">
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-gray-700 focus:outline-none focus:border-red-500 cursor-pointer"
+            className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-gray-700 focus:outline-none focus:border-red-500 cursor-pointer"
           >
             <option value="ALL">All Statuses</option>
             <option value="IN_PROGRESS">In Progress</option>
@@ -595,7 +595,7 @@ export const PersonalProjectTracker: React.FC<PersonalProjectTrackerProps> = ({
           <select
             value={categoryFilter}
             onChange={e => setCategoryFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-gray-700 focus:outline-none focus:border-red-500 cursor-pointer"
+            className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-gray-700 focus:outline-none focus:border-red-500 cursor-pointer"
           >
             <option value="ALL">All Categories</option>
             {CATEGORY_OPTIONS.map(c => (
@@ -651,8 +651,8 @@ export const PersonalProjectTracker: React.FC<PersonalProjectTrackerProps> = ({
             >
               <div className="space-y-3">
                 {/* Header */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
+                <div className="flex flex-wrap items-start justify-between gap-2.5">
+                  <div className="space-y-1 min-w-0 flex-1">
                     <div className="flex items-center space-x-2">
                       <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-50 text-gray-700 border border-gray-200">
                         {p.category || 'General'}
@@ -782,7 +782,7 @@ export const PersonalProjectTracker: React.FC<PersonalProjectTrackerProps> = ({
                       value={quickMilestoneTitle[p.id] || ''}
                       onChange={e => setQuickMilestoneTitle({ ...quickMilestoneTitle, [p.id]: e.target.value })}
                       onKeyDown={e => { if (e.key === 'Enter') handleAddMilestone(p.id); }}
-                      className="flex-1 bg-white border border-gray-200 rounded-lg px-2.5 py-1 text-xs text-gray-900 placeholder-gray-400 focus:border-red-500 focus:outline-none"
+                      className="flex-1 min-w-0 bg-white border border-gray-200 rounded-lg px-2.5 py-1 text-xs text-gray-900 placeholder-gray-400 focus:border-red-500 focus:outline-none"
                     />
                     <button
                       onClick={() => handleAddMilestone(p.id)}
@@ -844,7 +844,7 @@ export const PersonalProjectTracker: React.FC<PersonalProjectTrackerProps> = ({
                       value={quickTaskTitle[p.id] || ''}
                       onChange={e => setQuickTaskTitle({ ...quickTaskTitle, [p.id]: e.target.value })}
                       onKeyDown={e => { if (e.key === 'Enter') handleAddTask(p.id); }}
-                      className="flex-1 bg-white border border-gray-200 rounded-lg px-2.5 py-1 text-xs text-gray-900 placeholder-gray-400 focus:border-red-500 focus:outline-none"
+                      className="flex-1 min-w-0 bg-white border border-gray-200 rounded-lg px-2.5 py-1 text-xs text-gray-900 placeholder-gray-400 focus:border-red-500 focus:outline-none"
                     />
                     <select
                       value={quickTaskPriority[p.id] || 'MEDIUM'}

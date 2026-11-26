@@ -139,8 +139,8 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
   return (
     <div className="space-y-5 text-left">
       {/* Top Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-gray-200 p-4 rounded-xl shadow-xs">
-        <div className="flex items-center space-x-3 flex-1 max-w-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-white border border-gray-200 p-4 rounded-xl shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 flex-1 sm:max-w-md">
           <div className="relative w-full">
             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -155,7 +155,7 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
           <select
             value={roleFilter}
             onChange={e => setRoleFilter(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-white border border-gray-200 text-xs text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="w-full sm:w-auto px-3 py-2 rounded-lg bg-white border border-gray-200 text-xs text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shrink-0"
           >
             <option value="ALL">All Roles</option>
             <option value="ADMIN">Admins</option>
@@ -167,7 +167,7 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xs transition-colors shrink-0"
+          className="flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xs transition-colors shrink-0"
         >
           <UserPlus className="w-4 h-4" />
           <span>Provision Account (CEO, COO, User)</span>
@@ -249,7 +249,7 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
       {/* PROVISION USER MODAL */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-6 text-left shadow-2xl space-y-4">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-5 sm:p-6 text-left shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-gray-200 pb-3">
               <div className="flex items-center space-x-2">
                 <UserPlus className="w-5 h-5 text-red-600" />
@@ -345,7 +345,7 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
       {/* EDIT USER MODAL */}
       {editingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-6 text-left shadow-2xl space-y-4">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-5 sm:p-6 text-left shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-gray-200 pb-3">
               <h3 className="font-bold text-sm text-gray-900">Edit User: {editingUser.fullName}</h3>
               <button onClick={() => setEditingUser(null)} className="text-gray-400 hover:text-gray-700 text-lg leading-none">&times;</button>
