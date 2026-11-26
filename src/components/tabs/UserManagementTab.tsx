@@ -26,6 +26,7 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
   // Edit User Modal
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
   const [editDept, setEditDept] = useState('');
   const [editRole, setEditRole] = useState<UserRole>('EMPLOYEE');
   const [editActive, setEditActive] = useState(true);
@@ -56,6 +57,7 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
   const handleStartEdit = (u: User) => {
     setEditingUser(u);
     setEditName(u.fullName);
+    setEditEmail(u.email || '');
     setEditDept(u.department);
     setEditRole(u.role);
     setEditActive(u.active);
@@ -69,8 +71,9 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
     if (!editingUser) return;
     try {
       const payload: any = {
-        fullName: editName,
-        department: editDept,
+        fullName: editName.trim(),
+        email: editEmail.trim(),
+        department: editDept.trim(),
         role: editRole,
         active: editActive,
         streakCount: Number(editStreak),
@@ -106,7 +109,7 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
     try {
       await adminApi.deleteUser(u.id);
       onUserMutated();
-      toast.success(`User ${u.fullName} deleted successfully from MongoDB Atlas!`, 'User Deleted');
+      toast.success(`User ${u.fullName} deleted successfully`, 'User Deleted');
     } catch (err: any) {
       toast.error(err.message || 'Failed to delete user', 'Deletion Failed');
     }
@@ -356,6 +359,17 @@ export const UserManagementTab: React.FC<UserManagementTabProps> = ({ users, onU
                   required
                   value={editName}
                   onChange={e => setEditName(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Corporate Email</label>
+                <input
+                  type="email"
+                  required
+                  value={editEmail}
+                  onChange={e => setEditEmail(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 />
               </div>
