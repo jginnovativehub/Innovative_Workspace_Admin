@@ -1,0 +1,65 @@
+{
+  "id": "/",
+  "name": "Innovative Hub — Admin Command Portal",
+  "short_name": "IH Admin",
+  "description": "Executive governance, user lifecycle directory, holiday & weekend policy, attendance oversight, and immutable audit control portal for JG Innovative Hub.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "dir": "ltr",
+  "lang": "en-US",
+  "theme_color": "#dc2626",
+  "background_color": "#ffffff",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Innovative Hub Admin Command Console (Desktop)"
+    },
+    {
+      "src": "/screenshots/mobile-narrow.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Innovative Hub Admin Governance Portal (Mobile)"
+    }
+  ]
+}
