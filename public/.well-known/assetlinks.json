@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.vercel.innovative_workspace_admin_5deh.twa",
+      "sha256_cert_fingerprints": [
+        "A5:41:5F:9C:22:99:89:02:D5:5D:70:86:39:43:8F:27:D3:04:86:A2:9F:40:4C:75:12:0B:00:1F:79:CE:DA:19"
+      ]
+    }
+  }
+]
